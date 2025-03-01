@@ -9,11 +9,38 @@
     "lint": "next lint"
   },
   "dependencies": {
-    "react": "^19.0.0",
-    "react-dom": "^19.0.0",
-    "next": "15.1.7"
+    "@deepgram/sdk": "^3.11.1",
+    "@google-cloud/text-to-speech": "^5.8.0",
+    "@google/generative-ai": "^0.22.0",
+    "@paypal/react-paypal-js": "^8.8.2",
+    "@radix-ui/react-dialog": "^1.1.6",
+    "@radix-ui/react-scroll-area": "^1.2.3",
+    "@radix-ui/react-separator": "^1.1.2",
+    "@radix-ui/react-slot": "^1.1.2",
+    "@radix-ui/react-tabs": "^1.1.3",
+    "@radix-ui/react-tooltip": "^1.1.8",
+    "@remotion/cli": "4.0.269",
+    "@remotion/cloudrun": "4.0.269",
+    "axios": "^1.7.9",
+    "class-variance-authority": "^0.7.1",
+    "clsx": "^2.1.1",
+    "convex": "^1.19.2",
+    "firebase": "^11.3.1",
+    "inngest": "^3.31.11",
+    "lucide-react": "^0.475.0",
+    "moment": "^2.30.1",
+    "next": "15.1.6",
+    "next-themes": "^0.4.4",
+    "prop-types": "^15.8.1",
+    "react": "^18.0.0",
+    "react-dom": "^18.0.0",
+    "remotion": "4.0.269",
+    "sonner": "^2.0.1",
+    "tailwind-merge": "^3.0.1",
+    "tailwindcss-animate": "^1.0.7"
   },
   "devDependencies": {
+    "@types/react": "19.0.10",
     "postcss": "^8",
     "tailwindcss": "^3.4.1"
   }
