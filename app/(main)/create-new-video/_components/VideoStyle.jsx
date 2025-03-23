@@ -28,7 +28,7 @@ export const options=[
     },
     {
         name:'Anime',
-        image:'/anime.jpg'
+        image:'/Anime.jpg'
     }
 ]
 

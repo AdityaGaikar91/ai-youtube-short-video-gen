@@ -49,12 +49,14 @@ function AppSidebar() {
     <Sidebar>
     <SidebarHeader>
         <div>
-        <div className='flex items-center gap-3 w-full justify-center mt-5'>
         <Link href={'https://ai-youtube-short-video-gen-jgaj.vercel.app/'}>
+        <div className='flex items-center gap-3 w-full justify-center mt-5'>
+        
             <Image src={'/logo.svg'} alt='logo' width={40} height={40}/>
             <h2 className='font-bold text-2xl'>GenVid</h2>
-        </Link>
+        
         </div>
+        </Link>
         <h2 className='text-lg text-gray-400 text-center mt-3'>AI Short Video Generator</h2>
         </div>
     </SidebarHeader>
