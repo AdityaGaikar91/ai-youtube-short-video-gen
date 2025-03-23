@@ -9,13 +9,13 @@ import Link from "next/link";
 function Header() {
   const {user} = useAuthContext();
   return (
-    <div className='p-4 flex items-center justify-between'>
-      <div className='flex items-center gap-3'>
+    <div className='p-4 flex items-center justify-between pointer-events-none'>
+      <div className='flex items-center gap-3 pointer-events-auto'>
         <Image src={'/logo.svg'} alt='logo' width={40} height={40} />
         <h2 className='text-2xl font-bold'>GenVid</h2>
       </div>
 
-      <div>
+      <div className='pointer-events-auto'>
        {!user? <Authentication>
            <Button>Get Started</Button>
         </Authentication>
