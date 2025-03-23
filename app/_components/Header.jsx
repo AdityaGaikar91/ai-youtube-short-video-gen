@@ -11,11 +11,12 @@ function Header() {
   return (
     <div className='p-4 flex items-center justify-between pointer-events-none'>
       <div className='flex items-center gap-3 pointer-events-auto'>
-        <Link href={'https://ai-youtube-short-video-gen-jgaj.vercel.app/'}>
+      <Link href={'https://ai-youtube-short-video-gen-jgaj.vercel.app/'}>
         <Image src={'/logo.svg'} alt='logo' width={40} height={40} />
         <h2 className='text-2xl font-bold'>GenVid</h2>
         </Link>
       </div>
+      
 
       <div className='pointer-events-auto'>
        {!user? <Authentication>
