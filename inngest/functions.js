@@ -163,7 +163,7 @@ export const GenerateVideoData = inngest.createFunction(
     )
 
     const UpdateDownloadUrl = await step.run(
-      'UpadateDonloadUrl',
+      'UpadateDownloadUrl',
       async () => {
         const result = await convex.mutation(api.videoData.UpdateVideoRecord,{
           recordId: recordId,
