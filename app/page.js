@@ -8,9 +8,9 @@ export default function Home() {
       {/* Spline 3D model as background */}
       <div className="absolute inset-0 z-0">
         <Spline 
-          scene="https://prod.spline.design/UK3pH-pqYBgKzbLe/scene.splinecode"
-          // "https://prod.spline.design/L-9ftzufk-Z9FqHc/scene.splinecode"
+          scene="https://prod.spline.design/L-9ftzufk-Z9FqHc/scene.splinecode"
           // 
+          // "https://prod.spline.design/UK3pH-pqYBgKzbLe/scene.splinecode"
           // "https://prod.spline.design/pS5RzgZp4ZhcVwAr/scene.splinecode"
           // "https://prod.spline.design/PC2xpNZjpZknh5s4/scene.splinecode"
           // "https://prod.spline.design/Wvhsrl3YG7ETCVhw/scene.splinecode"
