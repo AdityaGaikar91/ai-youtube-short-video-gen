@@ -63,11 +63,11 @@ function AppSidebar() {
     <SidebarContent>
       <SidebarGroup>
         <SidebarGroupContent>
-            <div className='mx-3 mt-8'>
+            {/* <div className='mx-3 mt-8'>
                 <Link href={'/create-new-video'}>
                     <Button className='w-full'>+Create New Video</Button>
                 </Link>
-            </div>
+            </div> */}
             <SidebarMenu>
                 {MenuItems.map((menu,index) => (
                     <SidebarMenuItem className="mt-3 mx-3" key={menu.url}>
