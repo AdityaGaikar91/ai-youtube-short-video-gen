@@ -12,9 +12,11 @@ const client = new textToSpeech.TextToSpeechClient({
 // Voice configuration mapping
 const voiceConfigs = {
     // African voices
+    
     af_sarah: { languageCode: 'af-ZA', name: 'af-ZA-Standard-A', ssmlGender: 'FEMALE' },
     af_sky: { languageCode: 'af-ZA', name: 'af-ZA-Standard-B', ssmlGender: 'FEMALE' },
     
+
     // American voices
     am_adam: { languageCode: 'en-US', name: 'en-US-Standard-A', ssmlGender: 'MALE' },
     am_echo: { languageCode: 'en-US', name: 'en-US-Standard-B', ssmlGender: 'MALE' },
@@ -24,6 +26,7 @@ const voiceConfigs = {
     am_michael: { languageCode: 'en-US', name: 'en-US-Standard-F', ssmlGender: 'MALE' },
     am_onyx: { languageCode: 'en-US', name: 'en-US-Standard-G', ssmlGender: 'MALE' },
     
+
     // High-fidelity voices
     hf_alpha: { languageCode: 'en-US', name: 'en-US-Studio-M', ssmlGender: 'MALE' },
     hf_beta: { languageCode: 'en-US', name: 'en-US-Studio-O', ssmlGender: 'FEMALE' },

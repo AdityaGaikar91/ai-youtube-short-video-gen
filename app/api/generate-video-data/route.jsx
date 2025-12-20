@@ -8,7 +8,6 @@ export async function POST(req) {
         name: 'generate-video-data',
         data: {
             ...formData
-
         }
     });
 
