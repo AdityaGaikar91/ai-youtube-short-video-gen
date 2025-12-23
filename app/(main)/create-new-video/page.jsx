@@ -11,6 +11,7 @@ import axios from 'axios';
 import { useMutation } from 'convex/react';
 import { api } from '@/convex/_generated/api';
 import { useAuthContext } from '@/app/provider';
+import AnimeWrapper from '@/app/_components/AnimeWrapper';
 
 function CreateNewVideo() {
 
@@ -62,34 +63,49 @@ function CreateNewVideo() {
     setLoading(false);
   }
   return (
-    <div>
-        <h2 className='text-3xl'>Create New Video</h2>
-        <div className='grid grid-cols-1 md:grid-cols-3 mt-8 gap-7'>
-            <div className='col-span-2 p-7 border rounded-xl h-[72vh] overflow-auto'>
+    <AnimeWrapper animation="fadeIn" duration={800}>
+        <h2 className='text-3xl font-bold text-white mb-8 drop-shadow-md'>Create New Video</h2>
+        <div className='grid grid-cols-1 md:grid-cols-3 gap-8'>
+            <AnimeWrapper animation="slideUp" duration={1000} delay={200} className='col-span-2 p-7 border border-white/20 rounded-xl h-[72vh] overflow-auto backdrop-blur-xl bg-black/10 shadow-2xl scrollbar-hide'>
                 {/* Topic & Script */}
-                <Topic onHandleInputChange={onHandleInputChange}/>
+                <div className="bg-white/5 p-4 rounded-lg mb-4 border border-white/10">
+                    <Topic onHandleInputChange={onHandleInputChange}/>
+                </div>
 
                 {/* Video Image Style */}
-                <VideoStyle onHandleInputChange={onHandleInputChange}/>
+                <div className="bg-white/5 p-4 rounded-lg mb-4 border border-white/10">
+                    <VideoStyle onHandleInputChange={onHandleInputChange}/>
+                </div>
 
                 {/* Voice */}
-                <Voice onHandleInputChange={onHandleInputChange}/>
+                <div className="bg-white/5 p-4 rounded-lg mb-4 border border-white/10">
+                    <Voice onHandleInputChange={onHandleInputChange}/>
+                </div>
 
                 {/* Captions */}
-                <Captions onHandleInputChange={onHandleInputChange}/>
-                <Button className="w-full mt-5"
-                    disabled={loading}
-                    onClick={GenerateVideo}
-                >{loading ? <Loader2Icon className='animate-spin' /> : <WandSparkles/>}Generate Video</Button>
+                <div className="bg-white/5 p-4 rounded-lg mb-4 border border-white/10">
+                    <Captions onHandleInputChange={onHandleInputChange}/>
+                </div>
 
+                <AnimeWrapper hover>
+                    <Button className="w-full mt-8 py-6 text-lg shadow-xl hover:shadow-2xl transition-all bg-gradient-to-r from-purple-600 to-pink-600 border-none text-white font-semibold transform hover:-translate-y-1"
+                        disabled={loading}
+                        onClick={GenerateVideo}
+                    >{loading ? <Loader2Icon className='animate-spin' /> : <WandSparkles/>}Generate Video</Button>
+                </AnimeWrapper>
                 
-            </div>
-            <div>
-                <Preview formData={formData}/>
-            </div>
+            </AnimeWrapper>
+            <AnimeWrapper animation="slideUp" duration={1000} delay={400} className="h-full">
+                <div className='sticky top-24 border border-white/20 rounded-xl overflow-hidden shadow-2xl backdrop-blur-xl bg-black/10'>
+                     {/* Preview Container Glass Style */}
+                     <div className="p-4 bg-white/5">
+                        <Preview formData={formData}/>
+                     </div>
+                </div>
+            </AnimeWrapper>
         </div>
        
-    </div>
+    </AnimeWrapper>
   )
 }
 

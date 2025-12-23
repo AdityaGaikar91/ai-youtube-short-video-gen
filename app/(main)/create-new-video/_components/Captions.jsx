@@ -1,28 +1,32 @@
 import React, { useState } from 'react'
 const options = [
     {
-        name: 'Youtuber',
-        style: 'text-yellow-400 text-3xl font-extrabold uppercase tracking-wide drop-shadow-md px-3 py-1 rounded-lg'
+        name: 'Minimal',
+        style: 'text-white text-2xl font-semibold tracking-wide drop-shadow-sm'
     },
     {
-        name: 'Supreme',
-        style: 'text-white text-3xl font-bold italic drop-shadow-lg px-3 py-1 rounded-lg'
+        name: 'Super',
+        style: 'text-white text-4xl font-black uppercase text-stroke-2 text-stroke-black drop-shadow-[4px_4px_0_#000]'
     },
     {
         name: 'Neon',
-        style: 'text-green-500 text-3xl font-extrabold uppercase tracking-wide drop-shadow-lg px-3 py-1 rounded-lg'
+        style: 'text-cyan-400 text-3xl font-bold uppercase tracking-widest drop-shadow-[0_0_10px_rgba(34,211,238,1)]'
     },
     {
-        name: 'Glitch',
-        style: 'glitch-text text-pink-500 text-3xl font-extrabold uppercase tracking-wide drop-shadow-[4px_4px_0_#ff0000,-2px_-2px_0_#00ff00] px-3 py-1'
+        name: 'Playful',
+        style: 'text-white text-3xl font-extrabold bg-gradient-to-r from-pink-500 to-purple-500 px-4 py-2 rounded-full shadow-xl transform -rotate-2'
     },
     {
-        name: 'Fire',
-        style: 'text-red-500 text-3xl font-extrabold uppercase px-3 py-1 rounded-lg'
+        name: 'Cinematic',
+        style: 'text-amber-100/90 text-2xl font-serif tracking-[0.2em] uppercase drop-shadow-lg'
     },
     {
-        name: 'Futuristic',
-        style: 'futuristic-text bg-gradient-to-r from-purple-600 to-blue-500 text-white font-extrabold uppercase px-3 py-1 rounded-lg'
+        name: 'Bold',
+        style: 'text-yellow-400 text-3xl font-black uppercase tracking-tighter drop-shadow-[0_2px_10px_rgba(0,0,0,0.5)]'
+    },
+    {
+        name: 'Comic',
+        style: 'text-black text-3xl font-extrabold uppercase bg-white px-2 py-1 border-4 border-black shadow-[5px_5px_0px_0px_rgba(0,0,0,1)]'
     }
 ]
 

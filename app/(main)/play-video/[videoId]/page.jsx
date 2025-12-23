@@ -5,6 +5,7 @@ import VideoInfo from '../_components/VideoInfo'
 import { useConvex } from 'convex/react'
 import { api } from '@/convex/_generated/api';
 import { useParams } from 'next/navigation';
+import AnimeWrapper from '@/app/_components/AnimeWrapper';
 
 function PlayVideo() {
 
@@ -25,16 +26,16 @@ function PlayVideo() {
     }
 
   return (
-    <div className='grid grid-cols-1 md:grid-cols-2 gap-10'>
-        <div>
+    <AnimeWrapper animation="fadeIn" duration={800} className='grid grid-cols-1 md:grid-cols-2 gap-10'>
+        <AnimeWrapper animation="slideUp" duration={1000} delay={200}>
             {/* Remotion Player */}
             <RemotionPlayer videoData={videoData}/>
-        </div>
-        <div>
+        </AnimeWrapper>
+        <AnimeWrapper animation="slideUp" duration={1000} delay={400}>
             {/* Video Information */}
             <VideoInfo videoData={videoData}/>
-        </div>
-    </div>
+        </AnimeWrapper>
+    </AnimeWrapper>
   )
 }
 

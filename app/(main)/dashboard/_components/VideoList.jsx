@@ -8,6 +8,7 @@ import moment from 'moment';
 import Image from 'next/image';
 import Link from 'next/link';
 import React, { useEffect, useState } from 'react'
+import AnimeWrapper from '@/app/_components/AnimeWrapper';
 
 function VideoList() {
     const [videoList, setVideoList] = useState([]);
@@ -59,28 +60,28 @@ function VideoList() {
             </Link>
         </div>
         :
-        <div className='grid grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-5 mt-10  '>
+        <div className='grid grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-5 mt-10'>
             {videoList?.map((video, index) => (
-                <Link key={index} href={'/play-video/'+video?._id}>
-                <div className='relative'>
+                <AnimeWrapper key={index} animation="scaleIn" duration={500} delay={index * 100} hover>
+                <Link href={'/play-video/'+video?._id}>
+                <div className='relative group overflow-hidden rounded-xl border border-white/10 shadow-md transition-all hover:shadow-xl hover:border-white/30'>
                    {video?.status == 'completed' ? <Image src={video?.images[0]} 
                     alt={video?.title}
                     width={500}
                     height={500}
-                    className='w-full object-cover rounded-xl
-                    aspect-[2/3]'
+                    className='w-full object-cover rounded-xl aspect-[2/3]'
                     />:
-                    <div className='aspect-[2/3] p-5 w-full rounded-xl bg-slate-900
-                    flex items-center justify-center gap-2'>
-                        <RefreshCcw className='animate-spin'/>
-                        <h2>Generating...</h2>
+                    <div className='aspect-[2/3] p-5 w-full rounded-xl bg-slate-900/50 backdrop-blur-sm flex items-center justify-center gap-2'>
+                        <RefreshCcw className='animate-spin text-primary'/>
+                        <h2 className='text-gray-300'>Generating...</h2>
                     </div>}
-                    <div className='absolute bottom-3 px-5 w-full'>
-                        <h2>{video?.title}</h2>
-                        <h2 className='text-sm '>{ moment(video?._creationTime).fromNow()}</h2>
+                    <div className='absolute bottom-0 px-5 py-3 w-full bg-black/60 backdrop-blur-md text-white transition-transform transform translate-y-full group-hover:translate-y-0 duration-300'>
+                        <h2 className='font-bold text-lg truncate'>{video?.title}</h2>
+                        <h2 className='text-xs text-gray-300'>{ moment(video?._creationTime).fromNow()}</h2>
                     </div>
                 </div>
                 </Link>
+                </AnimeWrapper>
             ))}
         </div>
         }

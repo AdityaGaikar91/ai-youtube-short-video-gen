@@ -43,7 +43,7 @@ const outfit = Outfit({ subsets: ['latin'] })
 
 export default function RootLayout({ children }) {
   return (
-    <html lang="en" suppressHydrationWarning={true}>
+    <html lang="en" suppressHydrationWarning={true} className="dark">
       <head>
         <script
           type="application/ld+json"
@@ -52,6 +52,7 @@ export default function RootLayout({ children }) {
       </head>
       <body
        className={outfit.className}
+       suppressHydrationWarning={true}
       >
         <ConvexClientProvider>
         {children}
