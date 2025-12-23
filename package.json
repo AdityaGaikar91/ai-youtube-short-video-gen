@@ -22,7 +22,7 @@
     "@react-spring/three": "^10.0.3",
     "@react-spring/web": "^10.0.3",
     "@react-three/drei": "^9.121.4",
-    "@react-three/fiber": "^9.4.2",
+    "@react-three/fiber": "^8.17.6",
     "@remotion/cli": "4.0.269",
     "@remotion/cloudrun": "4.0.269",
     "@splinetool/react-spline": "^4.1.0",
