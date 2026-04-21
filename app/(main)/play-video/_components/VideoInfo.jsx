@@ -1,10 +1,44 @@
+"use client"
 import { Button } from '@/components/ui/button';
 import { ArrowLeft, DownloadIcon } from 'lucide-react'
 import Link from 'next/link';
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import AnimeWrapper from '@/app/_components/AnimeWrapper';
+import { toast } from 'sonner';
+import { ScheduleModal } from './ScheduleModal';
+import { useQuery } from 'convex/react';
+import { api } from '@/convex/_generated/api';
+import { useAuthContext } from '@/app/provider';
 
 function VideoInfo({videoData}) {
+  const { user } = useAuthContext();
+  const [isScheduleModalOpen, setIsScheduleModalOpen] = useState(false);
+  
+  // Re-query user accounts to see what platforms are connected
+  const userAccounts = useQuery(api.socialAccounts.GetUserSocialAccounts, user ? { uid: user._id } : "skip");
+
+  const handleDownload = async () => {
+    if (!videoData?.downloadUrl) {
+      toast.error('Video is still processing. Please check back shortly.');
+      return;
+    }
+    try {
+      const response = await fetch(videoData.downloadUrl);
+      const blob = await response.blob();
+      const url = window.URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `${videoData.title || 'genvid-video'}.mp4`;
+      document.body.appendChild(a);
+      a.click();
+      window.URL.revokeObjectURL(url);
+      document.body.removeChild(a);
+      toast.success('Download started!');
+    } catch (err) {
+      toast.error('Download failed. Please try again.');
+    }
+  };
+
   return (
     <div className='p-8 border border-white/20 rounded-xl bg-white/5 backdrop-blur-md shadow-lg h-full'>
       <Link href={'/dashboard'}>
@@ -20,10 +54,34 @@ function VideoInfo({videoData}) {
         </div>
         <h2 className="text-lg text-gray-200">Video Style: <span className="font-semibold text-primary">{videoData?.videoStyle}</span></h2>
 
-        <AnimeWrapper hover>
-            <Button className="w-full mt-5"> <DownloadIcon/> Export & Download</Button>
-        </AnimeWrapper>
+        <div className="grid grid-cols-2 gap-4 mt-5">
+            <AnimeWrapper hover>
+                <Button
+                  className="w-full"
+                  onClick={handleDownload}
+                  disabled={!videoData?.downloadUrl}
+                >
+                  <DownloadIcon/> {videoData?.downloadUrl ? 'Export' : 'Processing...'}
+                </Button>
+            </AnimeWrapper>
+            
+            <AnimeWrapper hover>
+                <Button
+                  className="w-full bg-gradient-to-r from-purple-500 to-pink-500 border-none shadow-lg text-white font-bold"
+                  onClick={() => setIsScheduleModalOpen(true)}
+                >
+                  Schedule Post
+                </Button>
+            </AnimeWrapper>
+        </div>
       </div>
+
+      <ScheduleModal 
+        isOpen={isScheduleModalOpen}
+        onOpenChange={setIsScheduleModalOpen}
+        videoData={videoData}
+        accounts={userAccounts}
+      />
     </div>
   );
 }
