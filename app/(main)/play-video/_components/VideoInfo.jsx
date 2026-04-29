@@ -6,6 +6,7 @@ import React, { useEffect, useState } from 'react'
 import AnimeWrapper from '@/app/_components/AnimeWrapper';
 import { toast } from 'sonner';
 import { ScheduleModal } from './ScheduleModal';
+import { ScheduleStatusQueue } from './ScheduleStatusQueue';
 import { useQuery } from 'convex/react';
 import { api } from '@/convex/_generated/api';
 import { useAuthContext } from '@/app/provider';
@@ -82,6 +83,8 @@ function VideoInfo({videoData}) {
         videoData={videoData}
         accounts={userAccounts}
       />
+
+      <ScheduleStatusQueue videoId={videoData?._id} />
     </div>
   );
 }

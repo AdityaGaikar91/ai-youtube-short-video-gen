@@ -1,10 +1,6 @@
-const {
-    GoogleGenerativeAI,
-    HarmCategory,
-    HarmBlockThreshold,
-  } = require("@google/generative-ai");
+import { GoogleGenerativeAI, HarmCategory, HarmBlockThreshold } from "@google/generative-ai";
   
-  const apiKey = process.env.NEXT_PUBLIC_GEMINI_API_KEY;
+  const apiKey = process.env.GEMINI_API_KEY;
   const genAI = new GoogleGenerativeAI(apiKey);
   
   const model = genAI.getGenerativeModel({
@@ -57,3 +53,20 @@ export const GenerateImageScript = model.startChat({
     });
     // const result = await chatSession.sendMessage("INSERT_INPUT_HERE");
     // console.log(result.response.text());
+
+const captionPrompt = `You are an expert social media manager. I will provide you with a video script and a target platform. 
+Generate a viral, engaging caption for this video.
+Return a JSON object with: 
+{ "caption": "The text of your caption", "tags": "A comma separated string of hashtags WITHOUT the # symbol" }
+
+Constraints:
+- If platform is 'instagram', keep caption under 2000 chars.
+- If platform is 'youtube', keep caption under 4000 chars.`;
+
+export const GenerateSocialCaption = genAI.getGenerativeModel({
+    model: "gemini-3-flash-preview",
+    systemInstruction: captionPrompt,
+    generationConfig: {
+      responseMimeType: "application/json",
+    }
+});

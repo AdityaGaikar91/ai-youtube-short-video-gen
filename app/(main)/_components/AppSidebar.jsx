@@ -14,7 +14,7 @@ import {
   } from "@/components/ui/sidebar"
 import Image from 'next/image'
 import { Button } from '@/components/ui/button'
-import { Gem, HomeIcon, LucideFileVideo, Search, WalletCards } from 'lucide-react'
+import { Gem, HomeIcon, LucideFileVideo, Search, CalendarClock, Settings, WalletCards, Tv } from 'lucide-react'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { useAuthContext } from '@/app/provider'
@@ -37,9 +37,24 @@ const MenuItems=[
         icon: Search
     },
     {
+        title:'Anime Browser',
+        url:'/anime-browser',
+        icon: Tv
+    },
+    {
+        title:'Schedule',
+        url:'/schedule',
+        icon: CalendarClock
+    },
+    {
         title:'Billing',
         url:'/billing',
         icon: WalletCards
+    },
+    {
+        title:'Settings',
+        url:'/settings',
+        icon: Settings
     }
 ]
 
@@ -112,25 +127,6 @@ function AppSidebar() {
 
     }, [openMobile, isMobile]);
 
-    const handleMouseEnter = (e) => {
-        anime({
-          targets: e.currentTarget,
-          scale: 1.05,
-          duration: 300,
-          easing: 'easeOutQuad'
-        });
-    };
-
-    const handleMouseLeave = (e) => {
-        anime({
-          targets: e.currentTarget,
-          scale: 1.0,
-          duration: 300,
-          easing: 'easeOutQuad'
-        });
-    };
-
-    console.log(path)
   return (
     <Sidebar className="bg-transparent border-r-0"> {/* Transparent background for Glass UI */}
     <SidebarHeader className="bg-black/10 backdrop-blur-md rounded-br-2xl border-b border-r border-white/20">
@@ -155,10 +151,8 @@ function AppSidebar() {
                 {MenuItems.map((menu,index) => (
                     <SidebarMenuItem className="mt-3 mx-3 sidebar-item-animate" key={menu.url}>
                         <SidebarMenuButton 
-                            isActive={path==menu.url} 
-                            className={`p-5 transition-none text-white hover:bg-white/20 hover:text-white ${path==menu.url ? 'bg-primary/80 backdrop-blur-md shadow-lg border border-white/20' : ''}`} // Glass style for active button
-                            onMouseEnter={handleMouseEnter}
-                            onMouseLeave={handleMouseLeave}
+                            asChild
+                            className={`p-5 transition-all duration-300 ease-out hover:scale-105 text-white hover:bg-white/20 hover:text-white ${path==menu.url ? 'bg-primary/80 backdrop-blur-md shadow-lg border border-white/20' : ''}`} // Glass style for active button
                         >
                             <Link href={menu?.url} className='flex items-center gap-4 p-3'>
                                <menu.icon className="w-6 h-6"/>
@@ -170,7 +164,6 @@ function AppSidebar() {
             </SidebarMenu>
         </SidebarGroupContent>
       </SidebarGroup>
-      <SidebarGroup/>
     </SidebarContent>
     <SidebarFooter className="bg-black/10 backdrop-blur-md border-t border-r border-white/20">
         <div ref={creditsRef} className='p-5 m-4 border border-white/10 rounded-xl bg-white/5 backdrop-blur-md shadow-lg'>
@@ -178,9 +171,9 @@ function AppSidebar() {
                 <Gem className='text-white/80'/>
                 <h2 className='text-white/90 font-semibold'>{user?.credits} Credits Left</h2>
             </div>
-            <Link href={'/billing'}>
-            <Button className="w-full mt-3 hover:scale-105 transition-transform bg-gradient-to-r from-purple-500 to-pink-500 border-none shadow-lg text-white font-bold">Buy More Credits</Button>
-            </Link>
+            <Button asChild className="w-full mt-3 hover:scale-105 transition-transform bg-gradient-to-r from-purple-500 to-pink-500 border-none shadow-lg text-white font-bold">
+                <Link href={'/billing'}>Buy More Credits</Link>
+            </Button>
         </div>
     </SidebarFooter>
   </Sidebar>

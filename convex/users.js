@@ -21,9 +21,8 @@ export const CreateNewUser=mutation({
                 credits: 3
             }
             //If Not, Insert new user
-            const result = await ctx.db.insert('users', userData)
-            
-            return userData
+            const userId = await ctx.db.insert('users', userData)
+            return { ...userData, _id: userId }
         }
 
         return user[0];

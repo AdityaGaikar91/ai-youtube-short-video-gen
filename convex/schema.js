@@ -26,8 +26,11 @@ export default defineSchema({
         uid: v.id('users'),
         createdBy: v.string(),
         status: v.optional(v.string()),
-        downloadUrl: v.optional(v.string())
-    }),
+        downloadUrl: v.optional(v.string()),
+        seriesId: v.optional(v.id('videoSeries')),
+        partNumber: v.optional(v.number()),
+    }).index('by_seriesId', ['seriesId'])
+      .index('by_uid', ['uid']),
     userSocialAccounts: defineTable({
         uid: v.id('users'),
         platform: v.string(),               // 'youtube' | 'instagram'
@@ -56,4 +59,27 @@ export default defineSchema({
     }).index('by_uid', ['uid'])
       .index('by_videoId', ['videoId'])
       .index('by_status', ['status']),
-})
+    recurringSchedules: defineTable({
+        uid: v.id('users'),
+        platform: v.string(),
+        dayOfWeek: v.number(),
+        hour: v.number(),
+        minute: v.number(),
+        timezone: v.string(),
+        isActive: v.boolean(),
+        lastTriggeredAt: v.optional(v.number()),
+        createdAt: v.number(),
+    }).index('by_uid', ['uid'])
+      .index('by_active', ['isActive']),
+    animeCache: defineTable({
+        key: v.string(), // e.g., 'airing_anime_page_1', 'recent_manga_page_1'
+        data: v.any(),
+        updatedAt: v.number(),
+    }).index('by_key', ['key']),
+    videoSeries: defineTable({
+        uid: v.id('users'),
+        title: v.string(), 
+        animeId: v.optional(v.number()),
+        createdAt: v.number(),
+    }).index('by_uid', ['uid']),
+})

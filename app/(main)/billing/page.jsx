@@ -39,7 +39,7 @@ function Billing() {
             uid: user?._id,
             credits: Number(user?.credits)+Number(credits)
         })
-        console.log(result);
+        // Billing success
         setUser(prev => ({
             ...prev,
             credits: Number(user?.credits)+Number(credits)

@@ -21,7 +21,6 @@ function PlayVideo() {
         const result = await convex.query(api.videoData.GetVideoById,{
             videoId:videoId
         });
-        console.log(result);
         setVideoData(result);
     }
 

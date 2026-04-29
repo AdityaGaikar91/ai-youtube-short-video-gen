@@ -10,6 +10,8 @@ import { useMutation } from 'convex/react';
 import { api } from '@/convex/_generated/api';
 import { useAuthContext } from '@/app/provider';
 import { toast } from 'sonner';
+import { Wand2 } from 'lucide-react';
+import axios from 'axios';
 
 export function ScheduleModal({ isOpen, onOpenChange, videoData, accounts }) {
     const { user } = useAuthContext();
@@ -19,6 +21,7 @@ export function ScheduleModal({ isOpen, onOpenChange, videoData, accounts }) {
     const [caption, setCaption] = useState(videoData?.title || '');
     const [tags, setTags] = useState('');
     const [isScheduling, setIsScheduling] = useState(false);
+    const [isGenerating, setIsGenerating] = useState(false);
 
     const createSchedule = useMutation(api.scheduledPosts.CreateSchedule);
 
@@ -30,6 +33,37 @@ export function ScheduleModal({ isOpen, onOpenChange, videoData, accounts }) {
             setSelectedPlatforms(selectedPlatforms.filter(p => p !== platform));
         } else {
             setSelectedPlatforms([...selectedPlatforms, platform]);
+        }
+    };
+
+    const handleGenerateCaption = async () => {
+        if (!videoData?.script) {
+            toast.error("Video script not found for generation");
+            return;
+        }
+        
+        // Pick primary platform for context
+        let targetPlatform = selectedPlatforms[0] || 'youtube';
+
+        setIsGenerating(true);
+        try {
+            const response = await axios.post('/api/generate-caption', {
+                script: videoData.script,
+                platform: targetPlatform
+            });
+
+            if (response.data.success) {
+                setCaption(response.data.data.caption || '');
+                setTags(response.data.data.tags || '');
+                toast.success("Caption generated!");
+            } else {
+                toast.error(response.data.error || "Failed to generate");
+            }
+        } catch (error) {
+            console.error(error);
+            toast.error("An error occurred during generation");
+        } finally {
+            setIsGenerating(false);
         }
     };
 
@@ -53,13 +87,22 @@ export function ScheduleModal({ isOpen, onOpenChange, videoData, accounts }) {
         setIsScheduling(true);
         try {
             for (const platform of selectedPlatforms) {
-                await createSchedule({
+                const scheduleId = await createSchedule({
                     uid: user._id,
                     videoId: videoData._id,
                     platform: platform,
                     scheduledFor: scheduledFor,
                     caption: caption,
                     tags: tags
+                });
+
+                // Trigger the Inngest background upload worker
+                await axios.post('/api/schedule-post', {
+                    scheduleId,
+                    videoId: videoData._id,
+                    platform,
+                    scheduledFor,
+                    uid: user._id,
                 });
             }
             toast.success("Posts scheduled successfully!");
@@ -140,13 +183,33 @@ export function ScheduleModal({ isOpen, onOpenChange, videoData, accounts }) {
                     </div>
 
                     <div className="space-y-2">
-                        <Label className="text-gray-300">Caption</Label>
+                        <div className="flex justify-between items-center">
+                            <Label className="text-gray-300">Caption</Label>
+                            <Button 
+                                variant="ghost" 
+                                size="sm" 
+                                onClick={handleGenerateCaption}
+                                disabled={isGenerating}
+                                className="h-8 text-xs text-purple-400 hover:text-purple-300"
+                            >
+                                <Wand2 className="w-3 h-3 mr-2" />
+                                {isGenerating ? "Generating..." : "Auto Generate"}
+                            </Button>
+                        </div>
                         <Textarea 
                             className="bg-white/10 border-white/20 text-white min-h-[100px]" 
                             placeholder="Write your post caption here..."
                             value={caption}
                             onChange={(e) => setCaption(e.target.value)}
                         />
+                        <div className="flex justify-between text-xs text-gray-400">
+                            <span>
+                                {caption.length} / {selectedPlatforms.includes('instagram') ? 2200 : selectedPlatforms.includes('youtube') ? 5000 : 2000} chars
+                            </span>
+                            {caption.length > (selectedPlatforms.includes('instagram') ? 2200 : selectedPlatforms.includes('youtube') ? 5000 : 2000) && (
+                                <span className="text-red-400">Over character limit!</span>
+                            )}
+                        </div>
                     </div>
 
                     <div className="space-y-2">
@@ -166,7 +229,13 @@ export function ScheduleModal({ isOpen, onOpenChange, videoData, accounts }) {
                     </Button>
                     <Button 
                         onClick={handleSchedule} 
-                        disabled={isScheduling || selectedPlatforms.length === 0 || !date || !time}
+                        disabled={
+                            isScheduling || 
+                            selectedPlatforms.length === 0 || 
+                            !date || 
+                            !time ||
+                            caption.length > (selectedPlatforms.includes('instagram') ? 2200 : selectedPlatforms.includes('youtube') ? 5000 : 2000)
+                        }
                         className="bg-gradient-to-r from-purple-500 to-pink-500 text-white hover:opacity-90"
                     >
                         {isScheduling ? "Scheduling..." : "Schedule Post"}
