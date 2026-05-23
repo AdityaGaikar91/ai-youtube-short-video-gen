@@ -30,12 +30,44 @@ export const GenerateVideoData = inngest.createFunction(
   { id: "generate-video-data" },
   { event: "generate-video-data" },
   async ({ event, step }) => {
-    const { script, topic, title, caption, videoStyle, voice, recordId} = event?.data;
+    const { script, topic, title, caption, videoStyle, voice, recordId, animeId} = event?.data;
     const convex = new ConvexHttpClient(process.env.NEXT_PUBLIC_CONVEX_URL)
+
+    // Optional: Fetch Anime Assets if animeId is present
+    const AnimeAssets = await step.run("fetchAnimeAssets", async () => {
+      if (!animeId) return null;
+      try {
+        const query = `
+        query ($id: Int) {
+          Media (id: $id) {
+            bannerImage
+            coverImage { extraLarge }
+            characters (sort: [ROLE, RELEVANCE], perPage: 5) {
+                nodes { image { large } }
+            }
+          }
+        }`;
+        const response = await axios.post("https://graphql.anilist.co", {
+            query,
+            variables: { id: animeId }
+        });
+        const media = response.data.data.Media;
+        const images = [];
+        if (media.bannerImage) images.push(media.bannerImage);
+        if (media.coverImage?.extraLarge) images.push(media.coverImage.extraLarge);
+        media.characters?.nodes?.forEach(n => {
+            if (n.image?.large) images.push(n.image.large);
+        });
+        return images;
+      } catch (e) {
+        console.error("Error fetching anime assets:", e);
+        return null;
+      }
+    });
 
     //Generate Audio File MP3
     const GenerateAudioFile = await step.run(
-      "GennerateAudioFile", 
+      "generateAudioFile", 
       async () => {
       const result = await axios.post(BASE_URL + "/api/text-to-speech",
         {
@@ -77,8 +109,9 @@ export const GenerateVideoData = inngest.createFunction(
     const GenerateImagePrompts = await step.run(
       "generateImagePrompt", 
       async () => {
+        const stylePrefix = videoStyle === 'anime' ? 'high quality anime art style, detailed, cinematic lighting' : videoStyle;
         const FINAL_PROMPT = ImagePromptScript
-        .replace('{style}',videoStyle).replace('{script}',script);
+        .replace('{style}', stylePrefix).replace('{script}',script);
         const result  = await GenerateImageScript.sendMessage(FINAL_PROMPT);
         const resp = JSON.parse( result.response.text());
 
@@ -88,28 +121,39 @@ export const GenerateVideoData = inngest.createFunction(
     //Generate Image using AI
     const GenerateImages = await step.run("generateImages", async () => {
       let images = [];
-      images = await Promise.all(
+      
+      // If we have anime assets, we can use some of them directly or as reference
+      // For now, let's prepend them to the AI generated list if they exist
+      const animeStills = AnimeAssets || [];
+
+      const aiImages = await Promise.all(
         GenerateImagePrompts.map(async (element) => {
+          // If it's anime, add more descriptive keywords to the prompt
+          const enhancedPrompt = videoStyle === 'anime' 
+            ? `${element?.imagePrompt}, high-res anime, vivid colors, masterpiece, vertical orientation`
+            : element?.imagePrompt;
+
           const result = await axios.post(BASE_URL + "/api/generate-image",
             {
               width: 1024,
               height: 1024,
-              input: element?.imagePrompt,
+              input: enhancedPrompt,
               model: "sdxl", //'flux'
-              aspectRatio: "1:1", //Applicable to Flux model only
+              aspectRatio: "1:1",
             },
             {
               headers: {
-                "x-api-key": process.env.NEXT_PUBLIC_AIGURULAB_API_KEY, // Your API Key
-                "Content-Type": "application/json", // Content Type
+                "x-api-key": process.env.NEXT_PUBLIC_AIGURULAB_API_KEY,
+                "Content-Type": "application/json",
               },
             }
           );
-          console.log(result.data.image) //Output Result: Base 64 Image
           return result.data.image;
         })
       )
-      return images;
+      
+      // Merge: take first 2 anime assets and then AI images, capped at 5 total
+      return [...animeStills.slice(0, 2), ...aiImages].slice(0, 5);
     });
 
     //Save All Data to DB
@@ -155,15 +199,14 @@ export const GenerateVideoData = inngest.createFunction(
         });
          
         if (result.type === 'success') {
-          console.log(result.bucketName);
-          console.log(result.renderId);
+          // Render success
         }
         return result?.publicUrl;
       }
     )
 
     const UpdateDownloadUrl = await step.run(
-      'UpadateDownloadUrl',
+      'updateDownloadUrl',
       async () => {
         const result = await convex.mutation(api.videoData.UpdateVideoRecord,{
           recordId: recordId,
@@ -184,3 +227,5 @@ export const GenerateVideoData = inngest.createFunction(
     return RenderVideo;
   }
 )
+
+

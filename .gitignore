@@ -40,7 +40,7 @@ yarn-error.log*
 *.tsbuildinfo
 next-env.d.ts
 
-# pnpm
-pnpm-lock.yaml
 
-.planning
+# AI Files
+.planning.agent/
+.planning/

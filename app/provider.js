@@ -12,18 +12,23 @@ function Provider({children}) {
   const[user,setUser] = useState();
   const CreateUser = useMutation(api.users.CreateNewUser);
   useEffect(()=>{
-    const unsubscribe = onAuthStateChanged(auth, async(user)=>{
-      console.log(user);
+    const unsubscribe = onAuthStateChanged(auth, async(firebaseUser)=>{
       
-      if(user){
-      const result = await CreateUser({
-        name: user?.displayName,
-        email: user?.email,
-        pictureURL: user?.photoURL
-      });
-      console.log(result);
-      setUser(result);
-    }
+      if(firebaseUser){
+        try {
+          const result = await CreateUser({
+            name: firebaseUser?.displayName,
+            email: firebaseUser?.email,
+            pictureURL: firebaseUser?.photoURL
+          });
+          setUser(result);
+        } catch (err) {
+          console.error('Error creating user in Convex:', err);
+          setUser(null);
+        }
+      } else {
+        setUser(null);
+      }
     })
     return ()=>unsubscribe();
   },[])

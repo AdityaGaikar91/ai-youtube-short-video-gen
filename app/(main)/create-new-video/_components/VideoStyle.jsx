@@ -42,7 +42,7 @@ function VideoStyle({onHandleInputChange}) {
         <div className='grid grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-2'>
             {options?.map((option, index)=>(
                 
-                <div className='relative' onClick={()=>{setSelectedStyle(option.name);
+                <div key={index} className='relative' onClick={()=>{setSelectedStyle(option.name);
                     onHandleInputChange('videoStyle', option.name)
                 }}>
                     <Image src={option.image} 

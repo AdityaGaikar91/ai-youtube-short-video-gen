@@ -1,10 +1,35 @@
+"use client"
 import { Button } from '@/components/ui/button';
 import { ArrowLeft, DownloadIcon } from 'lucide-react'
 import Link from 'next/link';
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import AnimeWrapper from '@/app/_components/AnimeWrapper';
+import { toast } from 'sonner';
 
 function VideoInfo({videoData}) {
+
+  const handleDownload = async () => {
+    if (!videoData?.downloadUrl) {
+      toast.error('Video is still processing. Please check back shortly.');
+      return;
+    }
+    try {
+      const response = await fetch(videoData.downloadUrl);
+      const blob = await response.blob();
+      const url = window.URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `${videoData.title || 'genvid-video'}.mp4`;
+      document.body.appendChild(a);
+      a.click();
+      window.URL.revokeObjectURL(url);
+      document.body.removeChild(a);
+      toast.success('Download started!');
+    } catch (err) {
+      toast.error('Download failed. Please try again.');
+    }
+  };
+
   return (
     <div className='p-8 border border-white/20 rounded-xl bg-white/5 backdrop-blur-md shadow-lg h-full'>
       <Link href={'/dashboard'}>
@@ -20,9 +45,17 @@ function VideoInfo({videoData}) {
         </div>
         <h2 className="text-lg text-gray-200">Video Style: <span className="font-semibold text-primary">{videoData?.videoStyle}</span></h2>
 
-        <AnimeWrapper hover>
-            <Button className="w-full mt-5"> <DownloadIcon/> Export & Download</Button>
-        </AnimeWrapper>
+        <div className="grid grid-cols-1 gap-4 mt-5">
+            <AnimeWrapper hover>
+                <Button
+                  className="w-full"
+                  onClick={handleDownload}
+                  disabled={!videoData?.downloadUrl}
+                >
+                  <DownloadIcon/> {videoData?.downloadUrl ? 'Export' : 'Processing...'}
+                </Button>
+            </AnimeWrapper>
+        </div>
       </div>
     </div>
   );

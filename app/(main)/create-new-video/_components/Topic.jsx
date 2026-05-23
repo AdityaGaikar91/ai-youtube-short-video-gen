@@ -21,11 +21,12 @@ const suggestion=[
     "Science Experiments",
     "Motivational Stories",
 ]
-function Topic({onHandleInputChange}) {
-    const [selectedTopic, setSelectedTopic] = useState();
+function Topic({onHandleInputChange, initialValue}) {
+    const [selectedTopic, setSelectedTopic] = useState(initialValue);
     const [selectedScriptIndex, setSelectedScriptIndex] = useState();
     const [scripts, setScripts] = useState();
     const [loading, setLoading] = useState(false);
+    const [isSeries, setIsSeries] = useState(false);
     const {user} = useAuthContext();
 
 
@@ -38,14 +39,20 @@ function Topic({onHandleInputChange}) {
         setLoading(true);
         setSelectedScriptIndex(null);
         try{
-        const result = await axios.post('/api/generate-script',{
+        const endpoint = isSeries ? '/api/generate-anime-series' : '/api/generate-script';
+        const result = await axios.post(endpoint,{
             topic: selectedTopic
         });
-        console.log(result.data);
-        setScripts(result.data?.scripts);
+        if (isSeries) {
+            setScripts(result.data?.parts);
+            onHandleInputChange('isSeries', true);
+            onHandleInputChange('seriesTitle', result.data?.seriesTitle);
+            onHandleInputChange('scripts', result.data?.parts); // Pass all parts to parent
+        } else {
+            setScripts(result.data?.scripts);
+        }
     }
     catch(e){
-        console.log(e);
     }
     setLoading(false);
     }
@@ -57,7 +64,7 @@ function Topic({onHandleInputChange}) {
         <h2>Video Topic</h2>
         <p className="text-sm text-gray-600">Select topic for your video</p>
 
-        <Tabs defaultValue="suggestion" className="w-full mt-2">
+        <Tabs defaultValue={initialValue ? "your_topic" : "suggestion"} className="w-full mt-2">
           <TabsList>
             <TabsTrigger value="suggestion">Suggestions</TabsTrigger>
             <TabsTrigger value="your_topic">Your Topic</TabsTrigger>
@@ -76,11 +83,29 @@ function Topic({onHandleInputChange}) {
             <div>
                 <h2>Enter your own topic</h2>
                 <Textarea placeholder="Enter your topic"
-                onChange={(event)=>onHandleInputChange('topic',event.target.value)}
+                value={selectedTopic}
+                onChange={(event)=>{
+                    setSelectedTopic(event.target.value);
+                    onHandleInputChange('topic',event.target.value)
+                }}
                 />
             </div>
           </TabsContent>
         </Tabs>
+
+        {/* Series Mode Toggle */}
+        <div className="flex items-center gap-2 mt-4 p-3 bg-white/5 rounded-lg border border-white/10">
+            <input 
+                type="checkbox" 
+                id="seriesMode" 
+                className="w-4 h-4 accent-purple-600"
+                checked={isSeries}
+                onChange={(e) => setIsSeries(e.target.checked)}
+            />
+            <label htmlFor="seriesMode" className="text-sm font-medium cursor-pointer">
+                Generate as Multi-Part Series (4 Videos)
+            </label>
+        </div>
 
        {scripts?.length> 0 && 
         <div className='mt-3'>
@@ -92,9 +117,11 @@ function Topic({onHandleInputChange}) {
                 ${selectedScriptIndex == index && 'border-white bg-secondary'}
                 `}
                 onClick={() => {setSelectedScriptIndex(index);
-                  onHandleInputChange('script', item?.content)
+                  onHandleInputChange('script', item?.content);
+                  if (isSeries) onHandleInputChange('partNumber', item?.partNumber);
                 }}
                 >
+                    {isSeries && <span className="text-xs font-bold text-purple-400 mb-1 block">PART {item.partNumber}</span>}
                     <h2 className='line-clamp-4 text-sm text-gray-300'>{item.content}</h2>
                 </div>
             ))}
