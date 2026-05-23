@@ -5,18 +5,8 @@ import Link from 'next/link';
 import React, { useEffect, useState } from 'react'
 import AnimeWrapper from '@/app/_components/AnimeWrapper';
 import { toast } from 'sonner';
-import { ScheduleModal } from './ScheduleModal';
-import { ScheduleStatusQueue } from './ScheduleStatusQueue';
-import { useQuery } from 'convex/react';
-import { api } from '@/convex/_generated/api';
-import { useAuthContext } from '@/app/provider';
 
 function VideoInfo({videoData}) {
-  const { user } = useAuthContext();
-  const [isScheduleModalOpen, setIsScheduleModalOpen] = useState(false);
-  
-  // Re-query user accounts to see what platforms are connected
-  const userAccounts = useQuery(api.socialAccounts.GetUserSocialAccounts, user ? { uid: user._id } : "skip");
 
   const handleDownload = async () => {
     if (!videoData?.downloadUrl) {
@@ -55,7 +45,7 @@ function VideoInfo({videoData}) {
         </div>
         <h2 className="text-lg text-gray-200">Video Style: <span className="font-semibold text-primary">{videoData?.videoStyle}</span></h2>
 
-        <div className="grid grid-cols-2 gap-4 mt-5">
+        <div className="grid grid-cols-1 gap-4 mt-5">
             <AnimeWrapper hover>
                 <Button
                   className="w-full"
@@ -65,26 +55,8 @@ function VideoInfo({videoData}) {
                   <DownloadIcon/> {videoData?.downloadUrl ? 'Export' : 'Processing...'}
                 </Button>
             </AnimeWrapper>
-            
-            <AnimeWrapper hover>
-                <Button
-                  className="w-full bg-gradient-to-r from-purple-500 to-pink-500 border-none shadow-lg text-white font-bold"
-                  onClick={() => setIsScheduleModalOpen(true)}
-                >
-                  Schedule Post
-                </Button>
-            </AnimeWrapper>
         </div>
       </div>
-
-      <ScheduleModal 
-        isOpen={isScheduleModalOpen}
-        onOpenChange={setIsScheduleModalOpen}
-        videoData={videoData}
-        accounts={userAccounts}
-      />
-
-      <ScheduleStatusQueue videoId={videoData?._id} />
     </div>
   );
 }
