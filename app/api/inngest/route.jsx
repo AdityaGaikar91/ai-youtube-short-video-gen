@@ -1,5 +1,5 @@
 import { inngest } from "@/inngest/client";
-import { GenerateVideoData, helloWorld, RefreshExpiringTokens, ProcessRecurringSchedules, ExecuteScheduledUpload } from "@/inngest/functions";
+import { GenerateVideoData, helloWorld} from "@/inngest/functions";
 import { serve } from "inngest/next";
 
 export const { GET, POST, PUT } = serve({
@@ -7,8 +7,12 @@ export const { GET, POST, PUT } = serve({
   functions: [
     helloWorld,
     GenerateVideoData,
-    RefreshExpiringTokens,
-    ProcessRecurringSchedules,
-    ExecuteScheduledUpload,
+
   ],
 });
+
+// , RefreshExpiringTokens, ProcessRecurringSchedules, ExecuteScheduledUpload 
+
+    // RefreshExpiringTokens,
+    // ProcessRecurringSchedules,
+    // ExecuteScheduledUpload,
