@@ -94,7 +94,7 @@ function Topic({onHandleInputChange, initialValue}) {
         </Tabs>
 
         {/* Series Mode Toggle */}
-        <div className="flex items-center gap-2 mt-4 p-3 bg-white/5 rounded-lg border border-white/10">
+        {/* <div className="flex items-center gap-2 mt-4 p-3 bg-white/5 rounded-lg border border-white/10">
             <input 
                 type="checkbox" 
                 id="seriesMode" 
@@ -105,7 +105,7 @@ function Topic({onHandleInputChange, initialValue}) {
             <label htmlFor="seriesMode" className="text-sm font-medium cursor-pointer">
                 Generate as Multi-Part Series (4 Videos)
             </label>
-        </div>
+        </div> */}
 
        {scripts?.length> 0 && 
         <div className='mt-3'>

@@ -12,8 +12,6 @@ export const CreateVideoData=mutation({
         uid: v.id('users'),
         createdBy: v.string(),
         credits: v.number(),
-        seriesId: v.optional(v.id('videoSeries')),
-        partNumber: v.optional(v.number()),
     },
     handler:async(ctx, args) => {
         // Atomic credit check and subtraction
@@ -34,8 +32,6 @@ export const CreateVideoData=mutation({
             uid: args.uid,
             createdBy: args.createdBy,
             status:'pending',
-            seriesId: args.seriesId,
-            partNumber: args.partNumber
         })
 
         await ctx.db.patch(args.uid,{
@@ -93,46 +89,5 @@ export const GetVideoById = query({
     handler:async(ctx, args) => {
         const result = await ctx.db.get(args.videoId);
         return result;
-    }
-})
-
-export const CreateVideoSeries = mutation({
-    args: {
-        uid: v.id('users'),
-        title: v.string(),
-        animeId: v.optional(v.number()),
-    },
-    handler: async (ctx, args) => {
-        const seriesId = await ctx.db.insert('videoSeries', {
-            uid: args.uid,
-            title: args.title,
-            animeId: args.animeId,
-            createdAt: Date.now(),
-        });
-        return seriesId;
-    }
-})
-
-export const GetUserSeries = query({
-    args: {
-        uid: v.id('users')
-    },
-    handler: async (ctx, args) => {
-        return await ctx.db.query('videoSeries')
-            .withIndex('by_uid', q => q.eq('uid', args.uid))
-            .order('desc')
-            .collect();
-    }
-})
-
-export const GetSeriesVideos = query({
-    args: {
-        seriesId: v.id('videoSeries')
-    },
-    handler: async (ctx, args) => {
-        return await ctx.db.query('videoData')
-            .withIndex('by_seriesId', q => q.eq('seriesId', args.seriesId))
-            .order('asc')
-            .collect();
     }
 })
