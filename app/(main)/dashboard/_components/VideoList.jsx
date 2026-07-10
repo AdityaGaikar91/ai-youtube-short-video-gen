@@ -119,7 +119,7 @@ function VideoList() {
 
   return (
     <div>
-        {(!loading) && videoList?.length == 0 ?
+        {(!loading) && videoList?.length === 0 && seriesList?.length === 0 ?
         <div className='flex flex-col items-center 
         justify-center mt-28 gap-5 p-5 border border-dashed border-orange-100 rounded-xl py-16'>
             <Image src={'/logo.svg'} alt='logo' width={60} height={60}/>
