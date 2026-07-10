@@ -116,7 +116,7 @@ function AppSidebar() {
     <Sidebar className="bg-transparent border-r-0"> {/* Transparent background for Glass UI */}
     <SidebarHeader className="bg-black/10 backdrop-blur-md rounded-br-2xl border-b border-r border-white/20">
         <div className='overflow-hidden p-4'> {/* Added overflow hidden to mask slide-in */}
-        <Link href={'https://ai-youtube-short-video-gen-jgaj.vercel.app/'}>
+        <Link href='/'>
         <div className='flex items-center gap-3 w-full justify-center'>
         
             <div ref={logoRef} className="drop-shadow-lg">

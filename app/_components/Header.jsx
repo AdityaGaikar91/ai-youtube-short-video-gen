@@ -18,7 +18,7 @@ function Header() {
     <AnimeWrapper animation="fadeIn" duration={1000} className='p-4 flex flex-col md:flex-row items-center justify-between pointer-events-none sticky top-0 z-50 backdrop-blur-md bg-white/10 border-b border-white/20 shadow-sm transition-all duration-300'>
       
       <div className="flex items-center justify-between w-full md:w-auto pointer-events-auto">
-        <Link href={'https://ai-youtube-short-video-gen-jgaj.vercel.app/'}>
+        <Link href='/'>
             <div className='flex items-center gap-3 cursor-pointer'>
                 <Image src={'/logo.svg'} alt='logo' width={40} height={40} />
                 <h2 className='text-2xl font-bold'>GenVid</h2>
