@@ -14,7 +14,7 @@ import {
   } from "@/components/ui/sidebar"
 import Image from 'next/image'
 import { Button } from '@/components/ui/button'
-import { Gem, HomeIcon, LucideFileVideo, Search, CalendarClock, Settings, WalletCards, Tv } from 'lucide-react'
+import { Gem, HomeIcon, LucideFileVideo, Search, CalendarClock, WalletCards, Tv } from 'lucide-react'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { useAuthContext } from '@/app/provider'
@@ -50,11 +50,6 @@ const MenuItems=[
         title:'Billing',
         url:'/billing',
         icon: WalletCards
-    },
-    {
-        title:'Settings',
-        url:'/settings',
-        icon: Settings
     }
 ]
 
